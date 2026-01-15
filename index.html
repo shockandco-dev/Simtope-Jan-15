@@ -63,6 +63,7 @@
 </head>
   <body>
     <div id="root">
+      <!-- These elements are visible only until React loads -->
       <header class="pre-render-nav">
         <div class="pre-render-logo">SIMTOPE</div>
         <nav style="display: flex; gap: 20px; font-size: 12px; font-weight: bold; color: #94a3b8;">
@@ -76,5 +77,6 @@
         <p style="color: #94a3b8; font-size: 20px; line-height: 1.6; margin-bottom: 40px;">Simtope provides Enterprise eSIM, Industrial Soldered SIMs, and Global Satellite IoT solutions for the modern workforce.</p>
       </main>
     </div>
+    <!-- Vite transforms this into the bundled entry script during build -->
 </body>
 </html>
