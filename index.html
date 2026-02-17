@@ -22,24 +22,19 @@
     <!-- Simtope Identification: v1.2.6-Final-Stable-Deploy -->
     <meta name="simtope-build-id" content="v1.2.6-Final-Stable-Deploy" />
 
-    <!-- GitHub Pages SPA Redirect Script (Custom Domain Optimized) -->
-    <script type="text/javascript">
+    <!-- GitHub Pages SPA Redirect Script -->
+    <script>
       (function(l) {
-        if (l.search[1] === 'p') {
-          var decoded = l.search.slice(1).split('&').map(function(s) { 
-            return s.replace(/~and~/g, '&') 
-          }).filter(function(v) {
-            return v.indexOf('p=/') !== 0; 
+        if (l.search) {
+          var q = {};
+          l.search.slice(1).split('&').forEach(function(v) {
+            var a = v.split('=');
+            q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
           });
-          
-          var path = l.search.slice(1).split('&').filter(function(s) { 
-            return s.indexOf('p=/') === 0; 
-          })[0].slice(3);
-
-          if (path !== undefined) {
+          if (q.p !== undefined) {
             window.history.replaceState(null, null,
-              l.pathname.slice(0, -1) + (path.slice(0, 1) === '/' ? path : '/' + path) +
-              (decoded.length ? '?' + decoded.join('&') : '') +
+              l.pathname.slice(0, -1) + (q.p || '') +
+              (q.q ? ('?' + q.q) : '') +
               l.hash
             );
           }
