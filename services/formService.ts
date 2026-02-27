@@ -1,10 +1,3 @@
-/**
- * GOOGLE SHEETS INTEGRATION
- * 1. Create a Google Sheet.
- * 2. Go to Extensions > Apps Script.
- * 3. Use the simplified doPost code provided in previous instructions.
- * 4. Deploy as a Web App (Access: Anyone, Execute as: Me).
- */
 
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbysRWWUq4X0u-A_mWr-wyV5hQrhMvkzOiquzTd1NEPjjeXeEyx6ogfQC9I1dCL6YDT0/exec';
 
@@ -15,15 +8,11 @@ export const submitToSpreadsheet = async (formData: Record<string, any>) => {
   }
 
   try {
-    // We use URLSearchParams to force the browser to send data as 
-    // application/x-www-form-urlencoded. This ensures Google Apps Script 
-    // populates the 'e.parameter' object correctly.
     const body = new URLSearchParams();
     for (const key in formData) {
       body.append(key, String(formData[key]));
     }
 
-    // no-cors mode is mandatory for Google Apps Script to bypass CORS preflight.
     await fetch(GOOGLE_SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
@@ -34,10 +23,48 @@ export const submitToSpreadsheet = async (formData: Record<string, any>) => {
       body: body.toString(),
     });
 
-    // In no-cors mode, we cannot read the response, so we assume success if no error is thrown.
     return { result: 'success' };
   } catch (error) {
     console.error('Simtope: Cloud sync failed:', error);
+    throw error;
+  }
+};
+
+export const submitToInstantly = async (formData: Record<string, any>) => {
+  const apiKey = process.env.INSTANTLY_API_KEY;
+  const apiUrl = process.env.INSTANTLY_API_URL;
+  const campaignId = process.env.INSTANTLY_CAMPAIGN_ID;
+
+  if (!apiKey || !apiUrl || !campaignId) {
+    console.warn('Instantly API credentials not configured.');
+    return { result: 'error', message: 'Instantly API credentials not configured.' };
+  }
+
+  try {
+    const response = await fetch(`${apiUrl}/lead/add`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        api_key: apiKey,
+        campaign_id: campaignId,
+        email: formData.email,
+        first_name: formData.name,
+        // You can add more fields here as needed
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Failed to submit to Instantly:', errorData);
+      throw new Error('Failed to submit to Instantly');
+    }
+
+    return { result: 'success' };
+  } catch (error) {
+    console.error('Instantly submission failed:', error);
     throw error;
   }
 };

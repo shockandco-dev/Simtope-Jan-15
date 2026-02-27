@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from './Button';
 import { MapPin, Phone, Loader2 } from 'lucide-react';
-import { submitToSpreadsheet } from '../services/formService';
+import { submitToInstantly } from '../services/formService';
 
 export const ContactPage: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -17,7 +17,7 @@ export const ContactPage: React.FC = () => {
     const data = Object.fromEntries(formData.entries());
     
     try {
-      await submitToSpreadsheet(data);
+      await submitToInstantly(data);
       setSubmitted(true);
       (e.target as HTMLFormElement).reset(); 
 

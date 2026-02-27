@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from './Button';
-import { submitToSpreadsheet } from '../services/formService';
+import { submitToInstantly } from '../services/formService';
 import { Loader2, CheckCircle } from 'lucide-react';
 
 export const Contact: React.FC = () => {
@@ -17,7 +17,7 @@ export const Contact: React.FC = () => {
     const data = Object.fromEntries(formData.entries());
 
     try {
-      await submitToSpreadsheet(data);
+      await submitToInstantly(data);
       setSubmitted(true);
       (e.target as HTMLFormElement).reset();
       
