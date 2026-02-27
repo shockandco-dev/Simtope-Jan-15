@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/Simtope-Jan-15/', // Set the base path to the repository name
+  base: '/', // Set the base path to root for the custom domain
   resolve: {
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json']
   },
